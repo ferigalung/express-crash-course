@@ -7,6 +7,8 @@ const port = process.env.PORT || 3000;
 
 // Init middleware
 app.use(logger);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
 
 // default route
 app.get('/', (req, res) => {
@@ -17,25 +19,9 @@ app.get('/', (req, res) => {
   });
 });
 
-const members = [
-  {
-    name: 'John Doe',
-    email: 'john@gmail.com',
-    status: 'active'
-  },
-  {
-    name: 'Emely',
-    email: 'emely@gmail.com',
-    status: 'active'
-  }
-];
-app.get('/api/members', (req, res) => {
-  res.json(members);
-});
-
 // routes
-const routes = require('./app/routes/food');
-app.use('/food/v1', routes);
+app.use('/food/v1', require('./app/routes/food'));
+app.use('/members/v1', require('./app/routes/members'));
 
 app.listen(port, () => {
   console.log(`${pkg.name} running and listening on port ${port}`);
